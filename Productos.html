@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDN Universal | Página Principal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
+    <style>
+        /* 1. Estilos para la barra lateral vertical (Sidebar) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; 
+            height: 100vh;
+            padding: 1rem;
+            z-index: 1070;
+            overflow-y: auto;
+        }
+
+        /* 2. Estilos para el contenido principal (Main) */
+        @media (min-width: 992px) {
+            .main-content {
+                margin-left: 250px; 
+            }
+        }
+
+        /* Clase para los enlaces del sidebar */
+        .sidebar .nav-link-item {
+            display: block;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s, color 0.3s;
+            text-decoration: none;
+            color: var(--bs-dark);
+        }
+        /* ESTILO DE HOVER SOLICITADO: Gris muy tenue */
+        .sidebar .nav-link-item:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue (10% de opacidad de --bs-secondary) */
+            color: var(--bs-secondary); /* Texto gris oscuro */
+        }
+
+        /* Ajuste para los items activos: Fondo Gris Oscuro */
+        .sidebar .nav-link-item.active {
+            background-color: var(--bs-secondary); /* CAMBIO: Usando --bs-secondary (gris oscuro) */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        /* Estilo para el Navbar Toggler que solo aparece en móvil */
+        .mobile-navbar {
+            display: block;
+        }
+        @media (min-width: 992px) {
+            .mobile-navbar {
+                display: none;
+            }
+        }
+
+        /* ============================================= */
+        /* 3. ESTILOS CUSTOM PARA EL SUBMENÚ EN HOVER (ESCRITORIO) */
+        /* ============================================= */
+        
+        /* Estilos del submenú (oculto por defecto) */
+        .sidebar .submenu-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            padding-bottom: 0;
+        }
+
+        /* Mostrar el submenú al pasar el ratón sobre el elemento padre */
+        .sidebar .menu-item-with-submenu:hover .submenu-dropdown {
+            max-height: 200px; /* Suficientemente grande para contener los enlaces */
+        }
+
+        /* Estilo para los enlaces dentro del submenú */
+        .sidebar .submenu-dropdown .nav-link {
+            padding: 0.3rem 1rem 0.3rem 2.5rem; /* Indentación para submenú */
+            text-align: left;
+            color: var(--bs-dark);
+            text-decoration: none;
+            display: block;
+        }
+        /* ESTILO DE HOVER SOLICITADO para submenú de escritorio: Gris muy tenue */
+        .sidebar .submenu-dropdown .nav-link:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue */
+            color: var(--bs-secondary); /* Texto gris oscuro */
+        }
+
+        /* Pequeño ajuste para el enlace principal del submenu, para que no tenga margin-bottom */
+        .sidebar .nav-link-submenu-toggle {
+            margin-bottom: 0 !important;
+        }
+
+        /* ============================================= */
+        /* 4. ESTILOS PARA EL MENÚ MÓVIL (HOVER Y ACTIVO GRIS) */
+        /* ============================================= */
+        .mobile-navbar .navbar-nav .nav-link:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue */
+            color: var(--bs-secondary) !important; /* Texto gris oscuro */
+            border-radius: 0.25rem; 
+        }
+
+        /* Ajuste para el enlace activo en móvil (Inicio) */
+        .mobile-navbar .navbar-nav .nav-link.active {
+            /* CAMBIO: Color de borde y texto para activo en móvil */
+            border-color: var(--bs-secondary) !important; 
+            color: var(--bs-secondary) !important;
+        }
+
+        .mobile-navbar .navbar-nav .nav-link.active:hover {
+            background-color: initial; 
+            color: var(--bs-secondary) !important;
+        }
+        
+        /* ============================================= */
+        /* 5. ESTILOS PARA LA ANIMACIÓN DEL CARRUSEL */
+        /* ============================================= */
+        .carousel-caption {
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .caption-hidden {
+            opacity: 0;
+            transform: translateY(20px); 
+        }
+        .caption-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+
+/* Nuevo estilo para el contorno gris al hacer hover en la tarjeta de producto */
+.product-card-inner:hover {
+    /* Cambia el borde de gris claro a un gris oscuro (secondary) o (dark) */
+    border-color: var(--bs-secondary) !important; 
+    /* Opcional: para darle un sutil efecto de elevación */
+    transform: translateY(-3px); 
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease-in-out; /* Agrega una transición suave */
+}
+
+/* Además, debe asegurar que el borde que está cambiando sea el del hover y no el fijo */
+/* Asegure que todas las tarjetas usen border-light-subtle por defecto */
+.product-card-inner {
+    transition: all 0.3s ease-in-out;
+}
+
+/* 🚀 NUEVO: Estilo para uniformizar las imágenes de producto */
+.product-card-inner .card-img-top {
+    width: 100%; /* Ocupa el ancho completo de la tarjeta */
+    height: 200px; /* Altura fija (ajusta a tu gusto) */
+    object-fit: cover; /* Recorta si es necesario, pero cubre el área sin distorsionar */
+}
+
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar bg-white shadow-lg d-none d-lg-flex flex-column justify-content-start">
+        <h4 class="text-dark mb-4 mt-3 text-center">
+            <a href="index.html" class="text-dark text-decoration-none">
+                <i class="bi bi-tools me-2"></i> UDN Universal
+            </a>
+        </h4>
+        <hr class="mb-4">
+    
+        <nav class="nav flex-column fw-normal w-100">
+            
+            <a class="nav-link nav-link-item " aria-current="page" href="index.html">
+                <i class="bi bi-house-door me-2"></i> Inicio
+            </a>
+            
+    
+            <div class="menu-item-with-submenu">
+                <a class="nav-link nav-link-item nav-link-submenu-toggle d-flex justify-content-between align-items-center"
+                    href="#servicios-section">
+                    <span><i class="bi bi-wrench me-2"></i> Servicios</span>
+                    <i class="bi bi-chevron-down ms-auto"></i> 
+                </a>
+    
+                <div class="submenu-dropdown">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#servicio-ingenieria">Automatizacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#servicio-mantenimiento">Mantenimiento y Reparacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#servicio-instalacion">Fabricacion</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+    
+            <div class="menu-item-with-submenu">
+                <a class="nav-link nav-link-item nav-link-submenu-toggle d-flex justify-content-between align-items-center active"
+                    href="Productos.html">
+                    <span><i class="bi bi-gear me-2"></i> Productos</span>
+                    <i class="bi bi-chevron-down ms-auto"></i> 
+                </a>
+    
+                <div class="submenu-dropdown">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Ensachetadoras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Embutidoras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Pasteurizadoras</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+    
+            <a class="nav-link nav-link-item" href="Nosotros.html">
+                <i class="bi bi-people me-2"></i> Sobre nosotros
+            </a>
+    
+            <a class="nav-link nav-link-item" href="Contacto.html">
+                <i class="bi bi-envelope me-2"></i> Contacto
+            </a>
+        </nav>
+    
+        <div class="mt-auto pt-3 border-top text-center">
+            <div class="d-flex justify-content-center gap-3 mb-2">
+                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20el%20Servicio%20de..." class="text-secondary" target="_blank" title="WhatsApp"><i class="bi bi-whatsapp fs-5 "></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61576554201725" class="text-secondary" target="_blank" title="Facebook"><i class="bi bi-facebook fs-5"></i></a>
+                <a href="mailto:soporte@tudominio.com" class="text-secondary" title="Correo Electrónico"><i class="bi bi-envelope-fill fs-5"></i></a>
+            </div>
+            <small class="text-secondary">&copy; © Yo y la I.A., todos los derechos reservados </small>
+        </div>
+    </aside>
+    
+    
+    <nav class="navbar navbar-expand-lg bg-white shadow-lg rounded-0 mobile-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-tools me-2 text-dark"></i> UDN Universal
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkupMobile" aria-controls="navbarNavAltMarkupMobile" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkupMobile">
+                <div class="navbar-nav fw-normal">
+                    <a class="nav-link text-dark p-2" href="index.html">Inicio</a>
+                    
+                    <a class="nav-link text-dark p-2 d-flex justify-content-between align-items-center prevent-scroll-toggle"
+                    data-bs-toggle="collapse" href="#serviciosSubMenuMobile" role="button" aria-expanded="false" aria-controls="serviciosSubMenuMobile"
+                    href="#">
+                    <span>Servicios</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                
+                <div class="collapse" id="serviciosSubMenuMobile">
+                    <ul class="nav flex-column ps-3">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark py-1" href="index.html#servicio-ingenieria">Automatizacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark py-1" href="index.html#servicio-mantenimiento">Mantenimiento y Reparacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark py-1" href="index.html#servicio-instalacion">Fabricacion</a>
+                        </li>
+                    </ul>
+                </div>
+
+                    <a class="nav-link active fw-bold text-secondary border-bottom border-2 border-secondary rounded-0 p-2 d-flex justify-content-between align-items-center prevent-scroll-toggle"
+                    data-bs-toggle="collapse" href="#productosSubMenuMobile" role="button" aria-expanded="true" aria-controls="productosSubMenuMobile"
+                    href="#"> 
+                    <span>Productos</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                    
+                    <div class="collapse show" id="productosSubMenuMobile"> <ul class="nav flex-column ps-3">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Ensachetadoras</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Embutidoras</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Pasteurizadoras</a>
+                            </li>
+                        </ul>
+                    </div>
+    
+                    
+                    <a class="nav-link text-dark p-2" href="Nosotros.html">Sobre nosotros</a>
+                    <a class="nav-link text-dark p-2" href="Contacto.html">Contacto</a>
+                    
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content" id="top">
+    
+    <div class="container my-5">
+        <h1 class="text-center fw-bold mb-4 border-bottom pb-2">NUESTROS PRODUCTOS</h1>
+    
+        <div class="row mb-5 align-items-center">
+            <div class="col-md-8 mb-3 mb-md-0">
+                <div class="input-group">
+                    <span class="input-group-text bg-secondary text-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" id="productSearch" placeholder="Buscar por nombre o descripción..." aria-label="Buscar productos">
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="input-group">
+                    <label class="input-group-text bg-secondary text-white" for="productSort"><i class="bi bi-sort-down"></i></label>
+                    <select class="form-select form-select-lg" id="productSort" aria-label="Ordenar productos">
+                        <option value="default" selected>Ordenar por...</option>
+                        <option value="price-asc">Precio: Menor a Mayor</option>
+                        <option value="price-desc">Precio: Mayor a Menor</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row g-4" id="productsContainer"> 
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="25000" data-category="ensachetadora">
+                <a href="Productos/Compresor1.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Compresor1.jpeg" class="card-img-top rounded-top-4" alt="Máquina 1">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Compresor1</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$25,000</span> USD</p>
+                            <p class="card-text text-secondary">Máquina automática de llenado de líquidos en sachets. Ideal para lácteos o jugos.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Ensachetadora%20A" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a> 
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="18000" data-category="embutidora">
+                <a href="Productos/Compresor2.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Compresor2.jpeg" class="card-img-top rounded-top-4" alt="Máquina 2">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Compresor2</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$18,000</span> USD</p>
+                            <p class="card-text text-secondary">Equipo hidráulico para embutidos, alta capacidad de producción y fácil limpieza.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Embutidora%20B" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="35000" data-category="pasteurizadora">
+                <a href="Productos/Embutidora1.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Embutidora1.jpeg" class="card-img-top rounded-top-4" alt="Máquina 3">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Embutidora1</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$35,000</span> USD</p>
+                            <p class="card-text text-secondary">Sistema de pasteurización HTST, optimizado para procesos continuos de gran volumen.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Pasteurizadora%20C" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="12000" data-category="embutidora">
+                <a href="Productos/Embutidora2.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Embutidora2.jpeg" class="card-img-top rounded-top-4" alt="Máquina 4">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Embutidora2</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$12,000</span> USD</p>
+                            <p class="card-text text-secondary">Modelo compacto para pequeñas producciones de salchichas y chorizos.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Embutidora%20D" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="40000" data-category="ensachetadora">
+                <a href="Productos/Embutidora3.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Embutidora3.jpeg" class="card-img-top rounded-top-4" alt="Máquina 5">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Embutidora3</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$40,000</span> USD</p>
+                            <p class="card-text text-secondary">Modelo de alto rendimiento, ideal para productos granulares o polvos.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Ensachetadora%20E" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="28000" data-category="pasteurizadora">
+                <a href="Productos/Ensachetadora1.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Ensachetadora1.jpeg" class="card-img-top rounded-top-4" alt="Máquina 6">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Ensachetadora1</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$28,000</span> USD</p>
+                            <p class="card-text text-secondary">Sistema Batch con tanque de mezcla y control de temperatura de precisión.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Pasteurizadora%20F" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="9000" data-category="embutidora">
+                <a href="Productos/Ensachetadora2.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Ensachetadora2.jpeg" class="card-img-top rounded-top-4" alt="Máquina 7">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Ensachetadora2</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$9,000</span> USD</p>
+                            <p class="card-text text-secondary">Modelo manual reforzado con múltiples boquillas intercambiables.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Embutidora%20G" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col-12 col-md-6 col-lg-3 product-card" data-price="32000" data-category="ensachetadora">
+                <a href="Productos/Ensachetadora3.html" class="text-decoration-none text-dark d-block">
+                    <div class="card border border-2 border-light-subtle rounded-4 shadow-lg h-100 product-card-inner">
+                        <img src="Imagenes de productos/Ensachetadora3.jpeg" class="card-img-top rounded-top-4" alt="Máquina 8">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center fw-bold">Ensachetadora3</h5>
+                            <p class="card-text fw-semibold mb-2">Precio: <span class="product-price text-danger">$32,000</span> USD</p>
+                            <p class="card-text text-secondary">Doble cabezal para duplicar la velocidad de empaquetado y sellado.</p>
+                            <div class="d-flex justify-content-center mt-auto pt-3">
+                                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20la%20Ensachetadora%20H" class="btn btn-success w-100 product-link-stop" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+    
+    
+    
+    <footer>
+    <div class="container-fluid bg-dark p-5 text-center text-white">
+            <div class="row">
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="#serviciosSubMenuMobile" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-tools"></i> Servicios
+                    </a>
+                    <ul class="list-unstyled">
+                        <li><a href="#servicio-ingenieria" class="text-decoration-none text-secondary">Automatizacion</a></li>
+                        <li><a href="#servicio-mantenimiento" class="text-decoration-none text-secondary">Mantenimiento y Reparacion</a></li>
+                        <li><a href="#servicio-instalacion" class="text-decoration-none text-secondary">Fabricacion</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="Contacto.html" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-whatsapp"></i> Contáctanos
+                    </a>
+                    <p class="text-secondary">udnuniversal........@gmail.com</p>
+                    <p class="text-secondary">+591 78687541</p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="Contacto.html" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-geo-alt-fill"></i> Ubicación
+                    </a>
+                    <p class="text-secondary">Av. Blanco Galindo km. 3,5 , subiendo a media cuadra por la calle Gilberto Rojas</p>
+                    <p class="text-secondary">Lunes a Viernes: 08:00 AM - 18:00 PM</p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="#" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-telephone-fill"></i> Redes Sociales
+                    </a>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <a href="#" class="text-secondary"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-secondary"><i class="bi bi-tiktok fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
+    </main>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+    $(document).ready(function() {
+        
+        // ... (Funciones de carrusel y scroll suave sin cambios) ...
+        
+        // ==============================================
+        // NUEVA FUNCIONALIDAD: BÚSQUEDA Y ORDENAMIENTO DE PRODUCTOS
+        // ==============================================
+        var $container = $('#productsContainer');
+        var $cards = $container.find('.product-card');
+
+        // 1. FUNCIÓN DE BÚSQUEDA (FILTRO)
+        $('#productSearch').on('keyup', function() {
+            var searchTerm = $(this).val().toLowerCase();
+            
+            $cards.each(function() {
+                var cardText = $(this).text().toLowerCase();
+                
+                if (cardText.includes(searchTerm)) {
+                    $(this).show(); // Muestra la tarjeta si coincide
+                } else {
+                    $(this).hide(); // Oculta la tarjeta si no coincide
+                }
+            });
+        });
+
+        // 2. FUNCIÓN DE ORDENAMIENTO (SORT)
+        $('#productSort').on('change', function() {
+            var sortValue = $(this).val();
+            var $sortedCards = $cards.get(); // Convierte los elementos jQuery a un array de DOM elements
+
+            $sortedCards.sort(function(a, b) {
+                var priceA = parseInt($(a).data('price'));
+                var priceB = parseInt($(b).data('price'));
+
+                if (sortValue === 'price-asc') {
+                    return priceA - priceB;
+                } else if (sortValue === 'price-desc') {
+                    return priceB - priceA;
+                }
+                return 0; // No cambiar el orden si es 'default'
+            });
+
+            // Reinsertar las tarjetas ordenadas en el contenedor
+            $.each($sortedCards, function(index, card) {
+                $container.append(card);
+            });
+        });
+
+    // ... (El resto del código JavaScript sin cambios) ...
+    // ==============================================
+    // ANIMACIÓN DEL CARRUSEL (Implementación del fade-in up)
+    // ==============================================
+    var $carousel = $('#carouselExampleCaptions');
+    var hiddenClass = 'caption-hidden';
+    var visibleClass = 'caption-visible';
+
+    // Habilitar el texto de la diapositiva ACTIVA al cargar
+    setTimeout(function() {
+        $carousel.find('.carousel-item.active .carousel-caption')
+            .removeClass(hiddenClass)
+            .addClass(visibleClass);
+    }, 100); 
+
+    // Escuchar el evento 'slide.bs.carousel' (antes de que cambie)
+    $carousel.on('slide.bs.carousel', function (e) {
+        // Desactivar (ocultar) el texto que está saliendo
+        $(e.relatedTarget).find('.carousel-caption')
+            .removeClass(visibleClass)
+            .addClass(hiddenClass);
+    });
+
+    // Escuchar el evento 'slid.bs.carousel' (después de que ha cambiado)
+    $carousel.on('slid.bs.carousel', function (e) {
+        // Activar (mostrar) el texto de la nueva diapositiva
+        $(e.relatedTarget).find('.carousel-caption')
+            .removeClass(hiddenClass)
+            .addClass(visibleClass);
+    });
+
+
+    // ==============================================
+    // SCROLL SUAVE PARA ENLACES DE ANCLAJE (hash links)
+    // Se EXCLUYE la clase '.prevent-scroll-toggle' para que los enlaces de menú principal 
+    // de Productos/Servicios en móvil no disparen el scroll ni el cierre.
+    // ==============================================
+    $('a[href*="#"]:not([href="#"]):not(.prevent-scroll-toggle)').click(function(event) {
+        
+        // Cierra el menú móvil si está abierto ANTES de hacer scroll
+        $('.navbar-collapse').collapse('hide'); 
+
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') 
+            || location.hostname == this.hostname) {
+
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+
+            if (target.length) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 50 // -50px para compensar un posible navbar fijo
+                }, 1000);
+                return false;
+            }
+        }
+    });
+    
+    // ==============================================
+    // Manejar el clic en los toggles del submenú móvil
+    // ==============================================
+    $('.prevent-scroll-toggle').click(function(event) {
+        // Previene el scroll por defecto que hace el navegador con href="#"
+        event.preventDefault(); 
+        // Deja que Bootstrap maneje el colapso/expansión (data-bs-toggle="collapse")
+    });
+
+    // ==============================================
+    // Cerrar el navbar principal al hacer clic en un enlace de ANCLA del submenú
+    // ==============================================
+    $('#productosSubMenuMobile a.nav-link, #serviciosSubMenuMobile a.nav-link').on('click', function() {
+        // Si el enlace es un hash link (ancla), cierra el menú principal
+        if ($(this).attr('href').startsWith('#')) {
+            $('.navbar-collapse').collapse('hide'); 
+        }
+        // Si el enlace es a un archivo (e.g., Productos.html), la navegación lo cerrará
+    });
+
+    // 🚀 NUEVO: Detener el evento de clic en el botón de WhatsApp
+    // Esto previene que el click en el botón active el enlace principal (<a>) que envuelve toda la tarjeta.
+        $('.product-link-stop').on('click', function(e) {
+        // e.stopPropagation() detiene que el evento de clic llegue al elemento padre (la tarjeta-enlace).
+        e.stopPropagation(); 
+    });
+
+
+});
+
+    </script>
+    </body>
+    </html>

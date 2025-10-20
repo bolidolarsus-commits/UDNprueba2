@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDN Universal | Página Principal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
+    <style>
+        /* 1. Estilos para la barra lateral vertical (Sidebar) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; 
+            height: 100vh;
+            padding: 1rem;
+            z-index: 1070;
+            overflow-y: auto;
+        }
+
+        /* 2. Estilos para el contenido principal (Main) */
+        @media (min-width: 992px) {
+            .main-content {
+                margin-left: 250px; 
+            }
+        }
+
+        /* Clase para los enlaces del sidebar */
+        .sidebar .nav-link-item {
+            display: block;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s, color 0.3s;
+            text-decoration: none;
+            color: var(--bs-dark);
+        }
+        /* ESTILO DE HOVER SOLICITADO: Gris muy tenue */
+        .sidebar .nav-link-item:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue (10% de opacidad de --bs-secondary) */
+            color: var(--bs-secondary); /* Texto gris oscuro */
+        }
+
+        /* Ajuste para los items activos: Fondo Gris Oscuro */
+        .sidebar .nav-link-item.active {
+            background-color: var(--bs-secondary); /* CAMBIO: Usando --bs-secondary (gris oscuro) */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        /* Estilo para el Navbar Toggler que solo aparece en móvil */
+        .mobile-navbar {
+            display: block;
+        }
+        @media (min-width: 992px) {
+            .mobile-navbar {
+                display: none;
+            }
+        }
+
+        /* ============================================= */
+        /* 3. ESTILOS CUSTOM PARA EL SUBMENÚ EN HOVER (ESCRITORIO) */
+        /* ============================================= */
+        
+        /* Estilos del submenú (oculto por defecto) */
+        .sidebar .submenu-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            padding-bottom: 0;
+        }
+
+        /* Mostrar el submenú al pasar el ratón sobre el elemento padre */
+        .sidebar .menu-item-with-submenu:hover .submenu-dropdown {
+            max-height: 200px; /* Suficientemente grande para contener los enlaces */
+        }
+
+        /* Estilo para los enlaces dentro del submenú */
+        .sidebar .submenu-dropdown .nav-link {
+            padding: 0.3rem 1rem 0.3rem 2.5rem; /* Indentación para submenú */
+            text-align: left;
+            color: var(--bs-dark);
+            text-decoration: none;
+            display: block;
+        }
+        /* ESTILO DE HOVER SOLICITADO para submenú de escritorio: Gris muy tenue */
+        .sidebar .submenu-dropdown .nav-link:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue */
+            color: var(--bs-secondary); /* Texto gris oscuro */
+        }
+
+        /* Pequeño ajuste para el enlace principal del submenu, para que no tenga margin-bottom */
+        .sidebar .nav-link-submenu-toggle {
+            margin-bottom: 0 !important;
+        }
+
+        /* ============================================= */
+        /* 4. ESTILOS PARA EL MENÚ MÓVIL (HOVER Y ACTIVO GRIS) */
+        /* ============================================= */
+        .mobile-navbar .navbar-nav .nav-link:hover {
+            background-color: rgba(108, 117, 125, 0.1); /* Gris muy tenue */
+            color: var(--bs-secondary) !important; /* Texto gris oscuro */
+            border-radius: 0.25rem; 
+        }
+
+        /* Ajuste para el enlace activo en móvil (Inicio) */
+        .mobile-navbar .navbar-nav .nav-link.active {
+            /* CAMBIO: Color de borde y texto para activo en móvil */
+            border-color: var(--bs-secondary) !important; 
+            color: var(--bs-secondary) !important;
+        }
+
+        .mobile-navbar .navbar-nav .nav-link.active:hover {
+            background-color: initial; 
+            color: var(--bs-secondary) !important;
+        }
+        
+        /* ============================================= */
+        /* 5. ESTILOS PARA LA ANIMACIÓN DEL CARRUSEL */
+        /* ============================================= */
+        .carousel-caption {
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .caption-hidden {
+            opacity: 0;
+            transform: translateY(20px); 
+        }
+        .caption-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+/* ============================================= */
+/* 6. ESTILO DE HOVER PARA LAS CARDS DE SERVICIOS */
+/* ============================================= */
+
+/* Estilos base para la transición y el borde inicial */
+.service-card-hover {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    /* Usamos un borde inicial claro para que el hover se note */
+    border: 1px solid var(--bs-border-color) !important; 
+}
+
+/* Efecto al pasar el cursor (Hover) */
+.service-card-hover:hover {
+    /* 1. Elevación: Ligeramente hacia arriba */
+    transform: translateY(-5px); 
+    
+    /* 2. Sombra: Le da la sensación de "elevado" */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; 
+    
+    /* 3. Borde Gris Sutil (Usando el gris oscuro de Bootstrap) */
+    border-color: var(--bs-secondary) !important;
+}
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar bg-white shadow-lg d-none d-lg-flex flex-column justify-content-start">
+    
+        <h4 class="text-dark mb-4 mt-3 text-center">
+            <a href="index.html" class="text-dark text-decoration-none">
+                <i class="bi bi-tools me-2"></i> UDN Universal
+            </a>
+        </h4>
+        <hr class="mb-4">
+    
+        <nav class="nav flex-column fw-normal w-100">
+            
+            <a class="nav-link nav-link-item active " aria-current="page" href="index.html">
+                <i class="bi bi-house-door me-2"></i> Inicio
+            </a>
+            
+    
+            <div class="menu-item-with-submenu">
+                <a class="nav-link nav-link-item nav-link-submenu-toggle d-flex justify-content-between align-items-center"
+                    href="#servicios-section">
+                    <span><i class="bi bi-wrench me-2"></i> Servicios</span>
+                    <i class="bi bi-chevron-down ms-auto"></i> 
+                </a>
+    
+                <div class="submenu-dropdown">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#servicio-ingenieria">Automatizacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#servicio-mantenimiento">Mantenimiento y Reparacion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#servicio-instalacion">Fabricacion</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+    
+            <div class="menu-item-with-submenu">
+                <a class="nav-link nav-link-item nav-link-submenu-toggle d-flex justify-content-between align-items-center"
+                    href="Productos.html">
+                    <span><i class="bi bi-gear me-2"></i> Productos</span>
+                    <i class="bi bi-chevron-down ms-auto"></i> 
+                </a>
+    
+                <div class="submenu-dropdown">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Ensachetadoras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Embutidoras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Productos.html">Pasteurizadoras</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+    
+            <a class="nav-link nav-link-item" href="Nosotros.html">
+                <i class="bi bi-people me-2"></i> Sobre nosotros
+            </a>
+    
+            <a class="nav-link nav-link-item " href="Contacto.html">
+                <i class="bi bi-envelope me-2"></i> Contacto
+            </a>
+        </nav>
+    
+        <div class="mt-auto pt-3 border-top text-center">
+            <div class="d-flex justify-content-center gap-3 mb-2">
+                <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20el%20Servicio%20de..." class="text-secondary" target="_blank" title="WhatsApp"><i class="bi bi-whatsapp fs-5 "></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61576554201725" class="text-secondary" target="_blank" title="Facebook"><i class="bi bi-facebook fs-5"></i></a>
+                <a href="mailto:soporte@tudominio.com" class="text-secondary" title="Correo Electrónico"><i class="bi bi-envelope-fill fs-5"></i></a>
+            </div>
+            <small class="text-secondary">&copy; © Yo y la I.A., todos los derechos reservados </small>
+        </div>
+    </aside>
+    
+    
+    <nav class="navbar navbar-expand-lg bg-white shadow-lg rounded-0 mobile-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-tools me-2 text-dark"></i> UDN Universal
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkupMobile" aria-controls="navbarNavAltMarkupMobile" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkupMobile">
+                <div class="navbar-nav fw-normal">
+                    
+                    <a class="nav-link active fw-bold text-secondary border-bottom border-2 border-secondary rounded-0 p-2" aria-current="page" href="index.html">Inicio</a>
+
+                    <a class="nav-link text-dark p-2 d-flex justify-content-between align-items-center prevent-scroll-toggle"
+                        data-bs-toggle="collapse" href="#serviciosSubMenuMobile" role="button" aria-expanded="false" aria-controls="serviciosSubMenuMobile"
+                        href="#">
+                        <span>Servicios</span>
+                        <i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <div class="collapse" id="serviciosSubMenuMobile">
+                        <ul class="nav flex-column ps-3">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="#servicio-ingenieria">Automatizacion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="#servicio-mantenimiento">Mantenimiento y Reparacion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="#servicio-instalacion">Fabricacion</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <a class="nav-link text-dark p-2 d-flex justify-content-between align-items-center prevent-scroll-toggle"
+                        data-bs-toggle="collapse" href="#productosSubMenuMobile" role="button" aria-expanded="false" aria-controls="productosSubMenuMobile"
+                        href="#"> 
+                        <span>Productos</span>
+                        <i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    
+                    <div class="collapse" id="productosSubMenuMobile">
+                        <ul class="nav flex-column ps-3">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Ensachetadoras</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Embutidoras</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark py-1" href="Productos.html">Pasteurizadoras</a>
+                            </li>
+                        </ul>
+                    </div>
+    
+                    
+                    
+
+                    <a class="nav-link text-dark p-2" href="Nosotros.html">Sobre nosotros</a>
+                    
+                    <a class="nav-link text-dark p-2" href="Contacto.html">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<main class="main-content" id="top">
+
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="max-height: 400px;">
+                <img src="Imagenes/Calibrador.jpg" class="d-block w-100 object-fit-cover" alt="Máquina calibradora">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded caption-hidden">
+                    <h3>CLIENTES SATISFECHOS CON EL TRABAJO</h3>
+                    <p>En UDN Universal, nuestra mejor carta de presentación es la satisfacción de quienes confían en nosotros. Entendemos que la maquinaria es el corazón de las operaciones de nuestros clientes, por lo que nuestra promesa de valor se centra en la confiabilidad y el rendimiento óptimo.
+
+                        Venta Confiable: Ofrecemos equipos nuevos y fabricados que cumplen con rigurosos estándares de calidad y están diseñados para una larga vida útil, asegurando que la inversión de nuestros clientes se traduzca en productividad sostenida.
+                        
+                        Reparación Experta: Nuestro servicio técnico está conformado por especialistas certificados que utilizan diagnósticos de precisión y piezas originales. Nuestro objetivo no es solo "arreglar" la máquina, sino restaurarla a su máximo rendimiento en el menor tiempo posible, minimizando el costoso tiempo de inactividad.</p>
+                </div>
+            </div>
+            <div class="carousel-item" style="max-height: 400px;">
+                <img src="Imagenes/Fresa.jpg" class="d-block w-100 object-fit-cover" alt="Tornillos industriales">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded caption-hidden">
+                    <h3>AYUDANDO AL DESARROLLO DEL PAIS</h3>
+                    <p>UDN Universal es un motor que impulsa la infraestructura y la modernización de los sectores productivos nacionales. Nuestra actividad de fabricación, venta y reparación tiene un impacto directo y positivo en la economía:
+
+                        Fortalecimiento Industrial: Al fabricar maquinaria localmente, proporcionamos a industrias clave como la construcción, la agricultura y la minería los equipos esenciales para llevar a cabo proyectos a gran escala. Esto se traduce en una mayor capacidad de producción y una reducción de la dependencia de importaciones.
+                        
+                        Eficiencia y Competitividad: Suministrar y mantener maquinaria de alta eficiencia permite a las empresas nacionales optimizar sus procesos, reducir costos operativos y ser más competitivas tanto en el mercado local como internacional.</p>
+                </div>
+            </div>
+            <div class="carousel-item" style="max-height: 400px;">
+                <img src="Imagenes/Engranaje.jpg" class="d-block w-100 object-fit-cover" alt="Máquina fresadora">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-3 rounded caption-hidden">
+                    <h3>CREANDO FUENTES DE INGRESO</h3>
+                    <p>Nuestro compromiso va más allá de la rentabilidad; somos una fuente estable y creciente de oportunidades económicas para la comunidad.
+
+                        Empleo Calificado: Generamos empleos directos de calidad para una fuerza laboral especializada, incluyendo ingenieros, diseñadores, técnicos metalmecánicos, soldadores y personal administrativo. Invertimos activamente en la capacitación y desarrollo profesional de nuestros colaboradores, asegurando salarios competitivos y un futuro laboral prometedor.
+                        
+                        Impulso a la Cadena de Suministro: Nuestras operaciones de fabricación y reparación generan una alta demanda de materias primas, componentes y servicios locales. Al priorizar a los proveedores nacionales, fortalecemos las pequeñas y medianas empresas (PyMEs) de nuestra cadena de valor, creando un efecto multiplicador en la economía.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+
+            <section class="container my-5 py-5" id="servicios-section">
+                <h2 class="text-center text-dark mb-5 display-5 fw-bold border-bottom pb-3">
+                    Nuestros Servicios
+                </h2>
+                
+                <div class="row g-5"> 
+                    <div class="col-12">
+                        <div class="card shadow-lg border border-1 border-light-subtle service-card-hover" id="servicio-ingenieria">
+                            <div class="card-body p-0">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-md-4">
+                                        <img src="Imagenes/Soldador.jpg" class="img-fluid rounded-start h-100 object-fit-cover" alt="Imagen de Automatización">
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <div class="p-4">
+                                            <h4 class="card-title text-dark fw-bold mb-3">
+                                                <i class="bi bi-puzzle-fill me-2 text-dark"></i> Automatizacion
+                                            </h4>
+                                            <p class="card-text text-secondary">Transformamos tus procesos manuales y semi-automáticos en sistemas inteligentes y eficientes. La automatización no solo aumenta la velocidad de producción, sino que también mejora la precisión y reduce el riesgo de errores humanos.
+
+                                                Beneficios Clave	Lo que Hacemos
+                                                Mayor Productividad	Implementación de PLC, SCADA y sistemas de control avanzados.
+                                                Reducción de Costos	Integración de robótica industrial y cobots.
+                                                Calidad Consistente	Desarrollo de soluciones a medida para líneas de ensamblaje y producción.
+                                                Seguridad Mejorada	Modernización de maquinaria y migración de sistemas obsoletos.</p>
+                                            
+                                            <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20el%20Servicio%20de..." 
+                                                class="btn btn-success mt-3" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer">
+                                                <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-12">
+                        <div class="card shadow-lg border border-1 border-light-subtle service-card-hover" id="servicio-mantenimiento">
+                            <div class="card-body p-0">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-md-4">
+                                        <img src="Imagenes/Amolador.jpg" class="img-fluid rounded-start h-100 object-fit-cover" alt="Imagen de Mantenimiento">
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <div class="p-4">
+                                            <h4 class="card-title text-dark fw-bold mb-3">
+                                                <i class="bi bi-tools me-2 text-dark"></i> Mantenimiento y Reparacion
+                                            </h4>
+                                            <p class="card-text text-secondary">Asegura la máxima disponibilidad de tu equipo. Ofrecemos servicios de mantenimiento preventivo, predictivo y correctivo para minimizar el tiempo de inactividad (downtime) y extender la vida útil de tu maquinaria.
+
+                                                Mantenimiento Preventivo: Programas a medida para evitar fallos inesperados.
+                                                
+                                                Mantenimiento Correctivo (Reparación de Emergencia): Respuesta rápida y efectiva para solucionar averías críticas.
+                                                
+                                                Diagnóstico Avanzado: Utilización de tecnología para identificar problemas antes de que se conviertan en fallas mayores.
+                                                
+                                                Reparación de Componentes: Especialistas en la reparación de equipos electrónicos, hidráulicos y neumáticos.</p>
+                                            
+                                            <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20el%20Servicio%20de..." 
+                                                class="btn btn-success mt-3" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer">
+                                                <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="card shadow-lg border border-1 border-light-subtle service-card-hover" id="servicio-instalacion">
+                            <div class="card-body p-0">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-md-4">
+                                        <img src="Imagenes/Soldador2 (2).jpg" class="img-fluid rounded-start h-100 object-fit-cover" alt="Imagen de Instalación y Capacitación">
+                                    </div>
+                                    
+                                    <div class="col-md-8">
+                                        <div class="p-4">
+                                            <h4 class="card-title text-dark fw-bold mb-3">
+                                                <i class="bi bi-lightning-fill me-2 text-dark"></i> Fabricacion
+                                            </h4>
+                                            <p class="card-text text-secondary">¿Necesitas una solución que no existe en el mercado? Diseñamos y fabricamos máquinas especializadas que se ajustan perfectamente a los requerimientos únicos de tu operación. Desde el concepto hasta la puesta en marcha, garantizamos equipos robustos, eficientes y listos para trabajar.
+
+                                                Diseño 3D y Prototipado: Modelado digital para visualizar y validar el diseño antes de la fabricación.
+                                                
+                                                Maquinaria de Procesos: Equipos para manejo de materiales, líneas de empaque o estaciones de trabajo específicas.
+                                                
+                                                Integración de Sensores: Fabricamos máquinas listas para ser automatizadas o integradas en tus sistemas existentes.
+                                                
+                                                Cumplimiento Normativo: Aseguramos que la maquinaria cumpla con todas las regulaciones de seguridad y calidad (ej. normas ISO, CE).</p>
+                                            
+                                            <a href="https://wa.me/59178687541?text=Hola,%20quisiera%20cotizar%20el%20Servicio%20de..." 
+                                                class="btn btn-success mt-3" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer">
+                                                <i class="bi bi-whatsapp me-2"></i> Cotizar Ahora
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+    </section>
+
+    
+    <footer>
+        <div class="container-fluid bg-dark p-5 text-center text-white">
+            <div class="row">
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="#serviciosSubMenuMobile" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-tools"></i> Servicios
+                    </a>
+                    <ul class="list-unstyled">
+                        <li><a href="#servicio-ingenieria" class="text-decoration-none text-secondary">Automatizacion</a></li>
+                        <li><a href="#servicio-mantenimiento" class="text-decoration-none text-secondary">Mantenimiento y Reparacion</a></li>
+                        <li><a href="#servicio-instalacion" class="text-decoration-none text-secondary">Fabricacion</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="Contacto.html" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-whatsapp"></i> Contáctanos
+                    </a>
+                    <p class="text-secondary">udnuniversal........@gmail.com</p>
+                    <p class="text-secondary">+591 78687541</p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="Contacto.html" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-geo-alt-fill"></i> Ubicación
+                    </a>
+                    <p class="text-secondary">Av. Blanco Galindo km. 3,5 , subiendo a media cuadra por la calle Gilberto Rojas</p>
+                    <p class="text-secondary">Lunes a Viernes: 08:00 AM - 18:00 PM</p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <a href="#" class="text-decoration-none text-secondary h5 d-block mb-3">
+                        <i class="bi bi-telephone-fill"></i> Redes Sociales
+                    </a>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <a href="#" class="text-secondary"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-secondary"><i class="bi bi-tiktok fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        // ==============================================
+        // ANIMACIÓN DEL CARRUSEL (Implementación del fade-in up)
+        // ==============================================
+        var $carousel = $('#carouselExampleCaptions');
+        var hiddenClass = 'caption-hidden';
+        var visibleClass = 'caption-visible';
+
+        // Habilitar el texto de la diapositiva ACTIVA al cargar
+        setTimeout(function() {
+            $carousel.find('.carousel-item.active .carousel-caption')
+                .removeClass(hiddenClass)
+                .addClass(visibleClass);
+        }, 100); 
+
+        // Escuchar el evento 'slide.bs.carousel' (antes de que cambie)
+        $carousel.on('slide.bs.carousel', function (e) {
+            // Desactivar (ocultar) el texto que está saliendo
+            $(e.relatedTarget).find('.carousel-caption')
+                .removeClass(visibleClass)
+                .addClass(hiddenClass);
+        });
+
+        // Escuchar el evento 'slid.bs.carousel' (después de que ha cambiado)
+        $carousel.on('slid.bs.carousel', function (e) {
+            // Activar (mostrar) el texto de la nueva diapositiva
+            $(e.relatedTarget).find('.carousel-caption')
+                .removeClass(hiddenClass)
+                .addClass(visibleClass);
+        });
+
+
+        // ==============================================
+        // SCROLL SUAVE PARA ENLACES DE ANCLAJE (hash links)
+        // Se EXCLUYE la clase '.prevent-scroll-toggle' para que los enlaces de menú principal 
+        // de Productos/Servicios en móvil no disparen el scroll ni el cierre.
+        // ==============================================
+        $('a[href*="#"]:not([href="#"]):not(.prevent-scroll-toggle)').click(function(event) {
+            
+            // Cierra el menú móvil si está abierto ANTES de hacer scroll
+            $('.navbar-collapse').collapse('hide'); 
+
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') 
+                || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+
+               
+            }
+        });
+        
+        // ==============================================
+        // Manejar el clic en los toggles del submenú móvil
+        // ==============================================
+        $('.prevent-scroll-toggle').click(function(event) {
+            // Previene el scroll por defecto que hace el navegador con href="#"
+            event.preventDefault(); 
+            // Deja que Bootstrap maneje el colapso/expansión (data-bs-toggle="collapse")
+        });
+
+        // ==============================================
+        // Cerrar el navbar principal al hacer clic en un enlace de ANCLA del submenú
+        // ==============================================
+        $('#productosSubMenuMobile a.nav-link, #serviciosSubMenuMobile a.nav-link').on('click', function() {
+             // Si el enlace es un hash link (ancla), cierra el menú principal
+             if ($(this).attr('href').startsWith('#')) {
+                $('.navbar-collapse').collapse('hide'); 
+             }
+             // Si el enlace es a un archivo (e.g., Productos.html), la navegación lo cerrará
+        });
+
+    });
+</script>
+</body>
+</html>
